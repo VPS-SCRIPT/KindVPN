@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="my" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Kind VPN Package Guide</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Padauk', 'sans-serif'],
+          },
+          colors: {
+            yellowBrand: {
+              300: '#fde047',
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', 'Padauk', sans-serif;
+      background-color: #06080e;
+      color: #f8fafc;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Glass Effect */
+    .glass-nav {
+      background: rgba(10, 13, 22, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(250, 204, 21, 0.22);
+    }
+    .glass-card {
+      background: linear-gradient(180deg, rgba(17, 22, 36, 0.95) 0%, rgba(10, 13, 24, 0.98) 100%);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.8);
+    }
+    .glass-card:hover {
+      border-color: rgba(250, 204, 21, 0.45);
+      box-shadow: 0 12px 30px -6px rgba(234, 179, 8, 0.24);
+    }
+
+    /* Segmented Switch Box */
+    .segmented-switch-container {
+      display: grid;
+      gap: 6px;
+      background: #0b0f19;
+      border: 1.5px solid rgba(250, 204, 21, 0.28);
+      padding: 6px;
+      border-radius: 22px;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.85);
+    }
+
+    /* Segment Switch Item Button */
+    .switch-tab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 4px;
+      border-radius: 16px;
+      border: 1px solid transparent;
+      transition: all 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      user-select: none;
+      outline: none;
+      min-width: 0;
+      position: relative;
+    }
+    .switch-tab-btn.unselected {
+      background: transparent;
+      color: #94a3b8;
+    }
+    .switch-tab-btn.unselected:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+    }
+    .switch-tab-btn.selected {
+      background: linear-gradient(135deg, #fde047 0%, #facc15 60%, #eab308 100%);
+      color: #080a0f !important;
+      font-weight: 800;
+      border-color: rgba(254, 240, 138, 0.8);
+      box-shadow: 0 6px 18px rgba(250, 204, 21, 0.45);
+      transform: scale(1.02);
+    }
+
+    /* Perfect Circular Logo Badge Styles */
+    .brand-circle-badge {
+      border-radius: 9999px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .brand-circle-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 9999px;
+    }
+
+    /* Running Border Light Beam Effect */
+    .btn-border-beam {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      padding: 1.5px;
+      display: block;
+      cursor: pointer;
+      user-select: none;
+      isolation: isolate;
+      box-shadow: 0 4px 20px -4px rgba(250, 204, 21, 0.25);
+    }
+    .btn-border-beam::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(
+        transparent,
+        transparent 15%,
+        rgba(250, 204, 21, 0.35) 25%,
+        #facc15 35%,
+        #ffffff 45%,
+        #facc15 55%,
+        rgba(250, 204, 21, 0.35) 65%,
+        transparent 75%,
+        transparent
+      );
+      animation: rotateBorderBeam 3s linear infinite;
+      z-index: 0;
+    }
+    @keyframes rotateBorderBeam {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .btn-border-beam-inner {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      border-radius: 18.5px;
+      background: linear-gradient(180deg, #151a2b 0%, #0c101c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      color: #ffffff;
+      transition: all 0.25s ease;
+    }
+    .btn-border-beam:hover .btn-border-beam-inner {
+      background: linear-gradient(180deg, #1e263d 0%, #111726 100%);
+      box-shadow: inset 0 0 18px rgba(250, 204, 21, 0.16);
+    }
+
+    .modal-enter {
+      animation: modalIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes modalIn {
+      0% { opacity: 0; transform: scale(0.96) translateY(8px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col antialiased selection:bg-yellow-400 selection:text-black pb-16">
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-40 glass-nav">
+    <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <!-- Logo Icon -->
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-200 p-[1.5px] shadow-lg shadow-yellow-500/25">
+          <div class="w-full h-full bg-[#06080e] rounded-2xl flex items-center justify-center">
+            <i class="fa-solid fa-shield-halved text-yellow-400 text-base"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-tight text-white">Kind VPN</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider bg-yellow-400/15 text-yellow-300 border border-yellow-400/30 px-2 py-0.5 rounded-full">Guide</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
+            <span>SIM Package ဝယ်နည်းများ</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400" id="syncDot" title="Cloudflare Worker Status"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Status / Login Button -->
+      <button id="adminStatusBtn" onclick="handleAdminEntry()" class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-yellow-500/35 text-slate-200 text-xs font-semibold flex items-center gap-2 transition duration-200 shadow-sm active:scale-95">
+        <i id="adminLockIcon" class="fa-solid fa-lock text-yellow-400 text-xs"></i>
+        <span id="adminBtnText">Admin Panel</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-3xl w-full mx-auto px-4 pt-5 space-y-5">
+    <!-- Hero Banner -->
+    <div class="relative overflow-hidden rounded-3xl p-5 sm:p-6 bg-gradient-to-br from-[#161a29] via-[#0f1422] to-[#1c1706] border border-yellow-500/30 shadow-xl">
+      <div class="absolute -right-8 -top-8 w-44 h-44 bg-yellow-400/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 space-y-2">
+        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-yellow-400/15 border border-yellow-400/30 text-yellow-300 text-[11px] font-semibold">
+          <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span>
+          ဗီဒီယိုကြည့်ပြီး အလွယ်တကူ လိုက်လံလျှောက်ထားနိုင်သည်
+        </div>
+        <h1 class="text-xl sm:text-2xl font-extrabold text-white leading-snug">
+          Kind VPN အတွက် Sim Card Package ဝယ်နည်းများ
+        </h1>
+        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-xl">
+          DTAC, TrueMove H, AIS အစရှိသော အော်ပရေတာများအတွက် အင်တာနက် package များကို အသေးစိတ် ဗီဒီယိုလမ်းညွှန်ချက်ဖြင့် လွယ်ကူစွာ လိုက်လံဝယ်ယူနိုင်ပါသည်။
+        </p>
+      </div>
+    </div>
+
+    <!-- Segmented Switch Filter Area -->
+    <div class="space-y-3">
+      <div class="flex items-center justify-between text-xs font-bold text-slate-300 px-1">
+        <span class="flex items-center gap-1.5 text-yellow-400">
+          <i class="fa-solid fa-sliders"></i> Operator ရွေးချယ်ရန်
+        </span>
+        <span id="activeFilterNameLabel" class="text-[11px] text-slate-400 font-normal">ပြသထားသည်: အားလုံး (All)</span>
+      </div>
+
+      <div class="segmented-switch-container" id="segmentedSwitchContainer"></div>
+
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+        <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Package အမည် သို့မဟုတ် USSD dial code ရှာဖွေရန်..." class="w-full bg-slate-900/90 border border-slate-800 rounded-2xl pl-9 pr-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition shadow-inner">
+      </div>
+    </div>
+
+    <!-- Packages List -->
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <h2 class="text-sm font-bold text-slate-200">ဗီဒီယို Packages များ</h2>
+          <span id="packageCountBadge" class="text-[11px] font-bold bg-slate-800 text-yellow-400 border border-slate-700 px-2.5 py-0.5 rounded-full">0</span>
+        </div>
+        <div class="text-[11px] text-slate-400 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-yellow-400 animate-ping"></span>
+          <span class="text-yellow-400 font-medium" id="cloudStatusText">Connecting Cloud...</span>
+        </div>
+      </div>
+
+      <div id="packagesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+      <!-- Empty State -->
+      <div id="emptyView" class="hidden flex-col items-center justify-center py-14 px-4 text-center rounded-3xl bg-slate-900/40 border border-slate-800/80 space-y-2">
+        <div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-400 text-xl">
+          <i class="fa-solid fa-film-slash"></i>
+        </div>
+        <h3 class="text-sm font-bold text-slate-200">Package ရှာမတွေ့ပါ</h3>
+        <p class="text-xs text-slate-500 max-w-xs">ရွေးချယ်ထားသော Operator သို့မဟုတ် ရှာဖွေမှုစကားလုံးကို ပြန်လည်စစ်ဆေးပေးပါ</p>
+        <button onclick="resetFilters()" class="text-xs text-yellow-400 hover:underline pt-1 font-bold">Filter အားလုံးရှင်းထုတ်မည်</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Video Player Modal -->
+  <div id="videoModal" class="fixed inset-0 z-50 hidden bg-black/92 backdrop-blur-md items-center justify-center p-2 sm:p-4 opacity-0 transition-opacity duration-200">
+    <div id="modalDialogBox" class="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col transition-all duration-200 max-h-[95vh]">
+      <div class="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-950/85 shrink-0">
+        <div class="flex items-center space-x-2.5 min-w-0 pr-2">
+          <div class="brand-circle-badge w-8 h-8 p-1 ring-1 ring-yellow-400/40 shadow-sm shrink-0">
+            <img id="modalLogoImg" src="" alt="Operator" class="w-full h-full object-contain">
+          </div>
+          <span id="modalTitle" class="text-xs sm:text-sm font-bold text-white truncate">Package Guide</span>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button onclick="toggleVideoFullscreen()" title="Fullscreen" class="w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition">
+            <i class="fa-solid fa-expand text-xs"></i>
+          </button>
+          <button onclick="closeVideoModal()" class="w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="relative bg-black w-full flex items-center justify-center overflow-hidden min-h-[220px] max-h-[72vh]">
+        <video id="videoElement" class="w-full max-h-[72vh] object-contain mx-auto" controls playsinline preload="metadata" onloadedmetadata="adjustModalSize(this)">
+          သင့် Browser သည် ဗီဒီယိုဖွင့်ရန် မထောက်ပံ့ပါ။
+        </video>
+      </div>
+
+      <div class="p-3.5 bg-slate-950/90 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shrink-0">
+        <p id="modalDesc" class="text-slate-300 text-xs leading-relaxed max-w-md line-clamp-2"></p>
+        <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+          <button onclick="closeVideoModal()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-slate-950 font-extrabold transition shadow-lg shadow-yellow-500/25 active:scale-95">
+            ပိတ်မည်
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div id="loginModal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4 modal-enter">
+      <div class="text-center space-y-1">
+        <div class="w-12 h-12 rounded-2xl bg-yellow-400/10 border border-yellow-400/25 text-yellow-400 mx-auto flex items-center justify-center text-lg">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">Admin Panel ဝင်ရောက်ရန်</h3>
+        <p class="text-xs text-slate-400">စနစ်စီမံခန့်ခွဲသူ စကားဝှက်ကို ထည့်သွင်းပါ</p>
+      </div>
+
+      <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+        <div class="relative">
+          <input type="password" id="loginPassword" required placeholder="စကားဝှက် ရိုက်ထည့်ပါ (KindVPN2026)" class="w-full bg-slate-950 border border-slate-800 rounded-2xl pl-4 pr-11 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-yellow-400 transition font-mono">
+          <button type="button" onclick="togglePasswordVisibility('loginPassword', 'passEyeIcon')" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-yellow-400 transition">
+            <i id="passEyeIcon" class="fa-solid fa-eye-slash text-sm"></i>
+          </button>
+        </div>
+        <div class="flex gap-2">
+          <button type="button" onclick="closeLoginModal()" class="flex-1 py-2.5 rounded-2xl bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700 transition">မလုပ်တော့ပါ</button>
+          <button type="submit" class="flex-1 py-2.5 rounded-2xl bg-yellow-500 hover:bg-yellow-400 text-xs font-bold text-slate-950 shadow-lg shadow-yellow-500/20 transition">ဝင်ရောက်မည်</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard Modal -->
+  <div id="dashboardModal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-md items-center justify-center p-3 sm:p-5">
+    <div class="w-full max-w-3xl max-h-[92vh] bg-slate-900 border border-slate-800 rounded-3xl flex flex-col overflow-hidden shadow-2xl modal-enter">
+      <!-- Header -->
+      <div class="px-5 py-4 border-b border-slate-800 bg-slate-950/70 flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-xl bg-yellow-400/20 text-yellow-400 flex items-center justify-center text-sm">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <div>
+            <h2 class="text-sm font-bold text-white">Kind VPN Admin Dashboard</h2>
+            <p class="text-[11px] text-slate-400">ပြင်ဆင်သမျှသည် Worker မှတဆင့် User အားလုံးဆီ ချက်ချင်းရောက်မည်</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="handleLogout()" class="px-2.5 py-1 text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 border border-rose-500/20 rounded-lg">ထွက်မည်</button>
+          <button onclick="closeDashboard()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Tabs -->
+      <div class="flex border-b border-slate-800 bg-slate-950/40 px-4 text-xs font-bold shrink-0">
+        <button id="tabBtnPkgs" onclick="switchAdminTab('pkgs')" class="py-3 px-3.5 border-b-2 border-yellow-400 text-yellow-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-boxes-stacked"></i> Package များ (<span id="adminPkgCount">0</span>)
+        </button>
+        <button id="tabBtnLogos" onclick="switchAdminTab('logos')" class="py-3 px-3.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5">
+          <i class="fa-solid fa-sim-card"></i> Operator & Logo များ (<span id="adminOpCount">0</span>)
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="p-4 sm:p-6 overflow-y-auto space-y-6 flex-grow">
+        <!-- Tab 1: Packages List -->
+        <div id="tabPkgsView" class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Cloudflare Worker ရှိ Packages များ</span>
+            <button onclick="openPackageFormModal()" class="px-3.5 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-950 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md transition">
+              <i class="fa-solid fa-plus"></i> Package အသစ်ထည့်မည်
+            </button>
+          </div>
+
+          <div class="border border-slate-800 rounded-2xl overflow-hidden bg-slate-950/50">
+            <div class="divide-y divide-slate-800/80" id="adminPackageList"></div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Operators Manager -->
+        <div id="tabLogosView" class="hidden space-y-5">
+          <form onsubmit="handleSaveOperatorForm(event)" class="p-4 sm:p-5 rounded-2xl bg-slate-950/80 border border-yellow-500/20 space-y-3">
+            <div class="flex items-center justify-between">
+              <span id="opFormTitle" class="text-xs font-bold text-yellow-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-plus"></i> Operator & Logo အသစ်ထည့်ရန်
+              </span>
+              <button type="button" id="cancelOpEditBtn" onclick="resetOperatorForm()" class="hidden text-[11px] text-slate-400 hover:text-white underline">
+                အသစ်ထည့်ခြင်းသို့ ပြန်ပြောင်းမည်
+              </button>
+            </div>
+
+            <input type="hidden" id="editOpId" value="">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] text-slate-300 font-semibold mb-1">Operator အမည်အပြည့်အစုံ</label>
+                <input type="text" id="opNameInput" required placeholder="ဥပမာ: MYTEL" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-400">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-300 font-semibold mb-1">ခလုတ်ပေါ်ပြမည့် အတိုကောက်အမည်</label>
+                <input type="text" id="opShortNameInput" required placeholder="ဥပမာ: Mytel" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-400">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] text-slate-300 font-semibold mb-1">Logo Image Direct URL</label>
+              <div class="flex gap-2">
+                <input type="url" id="opLogoUrlInput" required placeholder="https://.../logo.png" oninput="previewOpLogoInput(this.value)" class="flex-grow bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-yellow-400">
+                <div class="brand-circle-badge w-10 h-10 p-1 ring-2 ring-yellow-400/40 shadow">
+                  <img id="logoUrlPreviewImg" src="https://placehold.co/40x40/ffffff/000?text=Logo" alt="Preview" class="w-full h-full object-contain">
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-1">
+              <button type="submit" id="saveOpBtn" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs rounded-xl shadow-md transition">
+                Operator အချက်အလက် Cloud သို့သိမ်းမည်
+              </button>
+            </div>
+          </form>
+
+          <div>
+            <div class="text-xs font-bold text-slate-400 mb-2.5 uppercase tracking-wider">Cloud ပေါ်ရှိ Operators များနှင့် Logo များ</div>
+            <div id="adminOperatorList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Package Add / Edit Modal -->
+  <div id="packageModal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 modal-enter">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 id="pkgModalTitle" class="text-sm font-bold text-white">Package အသစ်ထည့်မည်</h3>
+        <button onclick="closePackageModal()" class="w-7 h-7 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleSavePackageForm(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="editPkgId" value="">
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Operator ရွေးပါ</label>
+          <select id="pkgOpSelect" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400"></select>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Package အမည်</label>
+          <input type="text" id="pkgTitleInput" required placeholder="ဥပမာ: Dtac Social Package" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">ရှင်းလင်းချက် (Description)</label>
+          <textarea id="pkgDescInput" rows="2" placeholder="Kind VPN နှင့် အသုံးပြုပုံ အတိုချုပ်" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">ဗီဒီယို Direct Link (.mp4 URL)</label>
+          <input type="url" id="pkgVideoUrlInput" required placeholder="https://.../video.mp4" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono focus:outline-none focus:border-yellow-400">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">USSD Dial Code (ဥပမာ: *104*777#)</label>
+          <input type="text" id="pkgUssdInput" placeholder="*104*777#" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono focus:outline-none focus:border-yellow-400">
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+          <button type="button" onclick="closePackageModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold">မလုပ်တော့ပါ</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold transition">Cloud ပေါ်သိမ်းဆည်းမည်</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Dialog -->
+  <div id="confirmModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm items-center justify-center p-4">
+    <div class="w-full max-w-xs bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl space-y-4 text-center modal-enter">
+      <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 mx-auto flex items-center justify-center text-xl">
+        <i class="fa-solid fa-trash-can"></i>
+      </div>
+      <div>
+        <h4 id="confirmTitle" class="text-sm font-bold text-white">ဖျက်ရန် သေချာပါသလား?</h4>
+        <p id="confirmText" class="text-xs text-slate-400 mt-1"></p>
+      </div>
+      <div class="flex gap-2">
+        <button id="btnCancelConfirm" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300">မလုပ်တော့ပါ</button>
+        <button id="btnAcceptConfirm" class="flex-1 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-bold text-white">ဖျက်မည်</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Box -->
+  <div id="toastBox" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <script>
+    // သင့်ကိုယ်ပိုင် Cloudflare Worker Link - အချက်အလက်များ အားလုံး သိမ်းဆည်း/ထုတ်ယူမည့် နေရာ
+    const CLOUDFLARE_WORKER_BASE = "https://kindvpn-guide.activevpn2026.workers.dev";
+    
+    // Application States
+    let operators = [];
+    let packages = [];
+    let activeOp = 'all';
+    let filterQuery = '';
+    let isAdmin = false;
+    let adminPass = 'KindVPN2026';
+    let onConfirmAction = null;
+
+    // အလွတ်ဖြစ်နေပါက ယာယီပြသရန် အချက်အလက်များ (Database ထဲမှာ ဘာမှမရှိရင် ဒါပြမယ်)
+    const DEFAULT_OPERATORS = [
+      { id: 'dtac', name: 'DTAC', shortName: 'DTAC', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXIB1stuxiDc1L4kBzwhYIMgrw-_uw78xbw0gX7ob0RA&s=10' },
+      { id: 'true', name: 'TrueMove H', shortName: 'True', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTza76zH0mhlAJb_aJjAiSN6UbUW3wT36DWbYMFj4WC2g&s' },
+      { id: 'ais', name: 'AIS', shortName: 'AIS', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHUEr7TzZLCDSayxzU-7K8odP5ZohzIdo66-F6AH5TM2N28E98di2RnJo&s=10' }
+    ];
+    const DEFAULT_PACKAGES = [
+      { id: 'pkg-1', operatorId: 'dtac', title: 'Dtac Social Package ( ၀ယ်နည်း )', desc: 'Dtac Social App Package ကို Kind VPN နှင့်တွဲဖက်သုံးရန် အလွယ်တကူ လျှောက်ထားနည်း', videoUrl: 'https://github.com/VPS-SCRIPT/DTAC-VIU-/releases/download/V1.0/Social.mp4', ussd: '*104*777#' },
+      { id: 'pkg-2', operatorId: 'dtac', title: 'Dtac VIU Package ( ၀ယ်နည်း )', desc: 'Dtac VIU Unlimited Package ကို Kind VPN ချိတ်ဆက်အသုံးပြုရန် ဝယ်ယူနည်း အပြည့်အစုံ', videoUrl: 'https://github.com/VPS-SCRIPT/DTAC-VIU-/releases/download/V1.0/VIU.mp4', ussd: '*104*666#' }
+    ];
+
+    // Worker မှ ဒေတာလှမ်းယူခြင်း
+    async function loadDataFromWorker() {
+      const dot = document.getElementById('syncDot');
+      const statusText = document.getElementById('cloudStatusText');
+      
+      try {
+        if(statusText) statusText.textContent = 'Syncing...';
+        
+        // Cloudflare /api/data ကနေ ဒေတာယူမယ်
+        const response = await fetch(`${CLOUDFLARE_WORKER_BASE}/api/data`);
+        if (!response.ok) throw new Error('Worker fetch failed');
+        
+        const data = await response.json();
+        
+        if (data && data.operators && data.operators.length > 0) {
+          operators = data.operators;
+        } else {
+          operators = [...DEFAULT_OPERATORS]; // အလွတ်ဆိုရင် default သုံးမယ်
+        }
+        
+        if (data && data.packages) {
+          packages = data.packages;
+        } else {
+          packages = [...DEFAULT_PACKAGES];
+        }
+
+        if(dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+        if(statusText) statusText.textContent = 'Worker Sync Live';
+        
+        // UI ကို Update လုပ်မယ်
+        renderSegmentedSwitch();
+        renderPackages();
+        populateOperatorSelect();
+        renderDashboardLists();
+
+      } catch (err) {
+        console.error("Worker Load Error:", err);
+        // Error တက်ရင် UI ကို လောလောဆယ် Default ဒါမှမဟုတ် ရှိတာနဲ့ ပြထားမယ်
+        if(operators.length === 0) operators = [...DEFAULT_OPERATORS];
+        if(packages.length === 0) packages = [...DEFAULT_PACKAGES];
+        
+        if(dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500';
+        if(statusText) statusText.textContent = 'Offline (Check Worker)';
+        
+        renderSegmentedSwitch();
+        renderPackages();
+      }
+    }
+
+    // Admin ပြင်လိုက်တဲ့ ဒေတာတွေကို Worker ပေါ် သိမ်းဆည်းခြင်း
+    async function syncAllToWorker() {
+      try {
+        const payload = {
+          operators: operators,
+          packages: packages
+        };
+        
+        const res = await fetch(`${CLOUDFLARE_WORKER_BASE}/api/save`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Password': adminPass // စကားဝှက်မှန်မှ Worker က လက်ခံမယ်
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          showToast('သိမ်းဆည်းမှု မအောင်မြင်ပါ။ စကားဝှက်မှားနေနိုင်ပါသည်။', 'error');
+          return false;
+        }
+
+        showToast('Worker ပေါ်သို့ အောင်မြင်စွာ သိမ်းဆည်းလိုက်ပါပြီ။', 'success');
+        return true;
+      } catch (err) {
+        console.error("Worker Save Error:", err);
+        showToast('Worker ဆီ ဒေတာပို့၍ မရပါ။ API Link မှန်မမှန်စစ်ပါ။', 'error');
+        return false;
+      }
+    }
+
+    function renderSegmentedSwitch() {
+      const container = document.getElementById('segmentedSwitchContainer');
+      const activeLabel = document.getElementById('activeFilterNameLabel');
+      if (!container) return;
+
+      const totalTabs = operators.length + 1;
+      container.style.gridTemplateColumns = `repeat(${totalTabs}, minmax(0, 1fr))`;
+
+      const currentOp = operators.find(o => o.id === activeOp);
+      if (activeLabel) {
+        activeLabel.textContent = activeOp === 'all'
+          ? 'ပြသထားသည်: အားလုံး (All)'
+          : `ပြသထားသည်: ${currentOp ? currentOp.name : activeOp}`;
+      }
+
+      const isAllSelected = (activeOp === 'all');
+      let html = `
+        <button type="button" onclick="selectOperatorTab('all')" class="switch-tab-btn ${isAllSelected ? 'selected' : 'unselected'}" title="Packages အားလုံးကြည့်မည်">
+          <div class="flex items-center justify-center gap-1.5 w-full">
+            <div class="brand-circle-badge w-6 h-6 ${isAllSelected ? 'bg-black text-yellow-400' : 'bg-yellow-400 text-black'} shadow-sm">
+              <i class="fa-solid fa-layer-group text-[10px]"></i>
+            </div>
+            <span class="font-extrabold text-[12px] sm:text-xs tracking-tight">All</span>
+          </div>
+          <span class="text-[9.5px] font-bold mt-1 px-1.5 py-0.5 rounded-full ${isAllSelected ? 'bg-black/25 text-black' : 'bg-slate-800 text-slate-400'}">${packages.length}</span>
+        </button>
+      `;
+
+      operators.forEach(op => {
+        const isSelected = (activeOp === op.id);
+        const count = packages.filter(p => p.operatorId === op.id).length;
+        const short = op.shortName || op.name;
+
+        html += `
+          <button type="button" onclick="selectOperatorTab('${op.id}')" class="switch-tab-btn ${isSelected ? 'selected' : 'unselected'}" title="${op.name} packages သီးသန့်ကြည့်မည်">
+            <div class="flex items-center justify-center gap-1.5 w-full min-w-0">
+              <div class="brand-circle-badge w-6 h-6 p-[2px] ring-1 ${isSelected ? 'ring-black/25' : 'ring-white/20'}">
+                <img src="${escapeAttr(op.logo)}" alt="${escapeAttr(op.name)}" onerror="this.src='https://placehold.co/32x32/ffffff/000?text=${escapeAttr(op.name.charAt(0))}'">
+              </div>
+              <span class="font-extrabold text-[12px] sm:text-xs truncate tracking-tight">${escapeHtml(short)}</span>
+            </div>
+            <span class="text-[9.5px] font-bold mt-1 px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-black/25 text-black' : 'bg-slate-800 text-slate-400'}">${count}</span>
+          </button>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function selectOperatorTab(id) {
+      activeOp = id;
+      renderSegmentedSwitch();
+      renderPackages();
+    }
+
+    function handleSearch(val) {
+      filterQuery = (val || '').trim().toLowerCase();
+      renderPackages();
+    }
+
+    function resetFilters() {
+      activeOp = 'all';
+      filterQuery = '';
+      const input = document.getElementById('searchInput');
+      if (input) input.value = '';
+      renderSegmentedSwitch();
+      renderPackages();
+    }
+
+    function renderPackages() {
+      const container = document.getElementById('packagesContainer');
+      const emptyView = document.getElementById('emptyView');
+      const badgeCount = document.getElementById('packageCountBadge');
+      if (!container) return;
+
+      const filtered = packages.filter(pkg => {
+        const matchOp = (activeOp === 'all' || pkg.operatorId === activeOp);
+        const matchText = !filterQuery ||
+          pkg.title.toLowerCase().includes(filterQuery) ||
+          (pkg.desc && pkg.desc.toLowerCase().includes(filterQuery)) ||
+          (pkg.ussd && pkg.ussd.toLowerCase().includes(filterQuery));
+        return matchOp && matchText;
+      });
+
+      if (badgeCount) badgeCount.textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        if (emptyView) {
+          emptyView.classList.remove('hidden');
+          emptyView.classList.add('flex');
+        }
+        return;
+      }
+
+      if (emptyView) {
+        emptyView.classList.add('hidden');
+        emptyView.classList.remove('flex');
+      }
+
+      let html = '';
+      filtered.forEach(pkg => {
+        const op = operators.find(o => o.id === pkg.operatorId) || {
+          name: 'SIM', shortName: 'SIM', logo: 'https://placehold.co/48x48/ffffff/000?text=SIM'
+        };
+
+        const ussdBtnHtml = pkg.ussd 
+          ? `<button onclick="copyUssd('${escapeAttr(pkg.ussd)}')" title="Dial code ကူးယူရန်" class="px-2.5 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-yellow-400 text-xs font-mono font-bold border border-yellow-500/25 flex items-center gap-1.5 shadow-sm active:scale-95 transition">
+              <span>${escapeHtml(pkg.ussd)}</span>
+              <i class="fa-regular fa-copy text-[11px]"></i>
+            </button>`
+          : '';
+
+        const adminControls = isAdmin 
+          ? `<div class="flex gap-2 pt-1">
+              <button onclick="editPackageItem('${escapeAttr(pkg.id)}')" class="flex-1 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-yellow-300 text-xs font-semibold flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-pen text-[10px]"></i> ပြင်ဆင်မည်
+              </button>
+              <button onclick="requestDeletePackage('${escapeAttr(pkg.id)}')" class="flex-1 py-1.5 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-900/40 text-xs font-semibold flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-trash-can text-[10px]"></i> ဖျက်မည်
+              </button>
+            </div>`
+          : '';
+
+        html += `
+          <div class="glass-card rounded-3xl p-5 flex flex-col justify-between transition-all duration-300">
+            <div class="space-y-3.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div class="brand-circle-badge w-12 h-12 p-1 ring-2 ring-yellow-400/40 shadow-md">
+                    <img src="${escapeAttr(op.logo)}" alt="${escapeAttr(op.name)}" onerror="this.src='https://placehold.co/48x48/ffffff/000?text=${escapeAttr(op.name.charAt(0))}'">
+                  </div>
+                  <div>
+                    <span class="text-xs sm:text-sm font-bold text-white block">${escapeHtml(op.name)}</span>
+                    <span class="text-[10.5px] text-yellow-400 font-medium flex items-center gap-1.5 mt-0.5">
+                      <span class="w-2 h-2 rounded-full bg-yellow-400 shadow-sm shadow-yellow-400"></span> Ready Video
+                    </span>
+                  </div>
+                </div>
+                ${ussdBtnHtml}
+              </div>
+
+              <h3 class="text-base font-extrabold text-white leading-snug">${escapeHtml(pkg.title)}</h3>
+              <p class="text-xs text-slate-400 leading-relaxed line-clamp-2">${escapeHtml(pkg.desc || 'Kind VPN ချိတ်ဆက်အသုံးပြုရန် package လမ်းညွှန်ချက်')}</p>
+            </div>
+
+            <div class="pt-4 mt-4 border-t border-slate-800 space-y-2">
+              <div onclick="openVideoPlayer('${escapeAttr(pkg.id)}')" class="btn-border-beam w-full group active:scale-95 transition-transform">
+                <div class="btn-border-beam-inner">
+                  <div class="flex items-center gap-3">
+                    <div class="relative w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-amber-400 to-yellow-200 text-slate-950 flex items-center justify-center shadow-lg shadow-yellow-400/50 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                      <span class="absolute inset-0 rounded-full bg-yellow-400 animate-ping opacity-30"></span>
+                      <i class="fa-solid fa-play text-xs ml-0.5 relative z-10 text-slate-950"></i>
+                    </div>
+                    <div class="text-left">
+                      <div class="text-xs sm:text-sm font-extrabold text-white tracking-tight group-hover:text-yellow-300 transition-colors">ဗီဒီယိုကြည့်မည်</div>
+                      <div class="text-[9.5px] text-yellow-400/80 font-bold uppercase tracking-wider">Watch Video Guide</div>
+                    </div>
+                  </div>
+                  <div class="w-7 h-7 rounded-xl bg-yellow-400/10 border border-yellow-400/25 text-yellow-400 flex items-center justify-center group-hover:translate-x-1 group-hover:bg-yellow-400 group-hover:text-slate-950 transition-all duration-200 shrink-0">
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                  </div>
+                </div>
+              </div>
+              ${adminControls}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function openVideoPlayer(pkgId) {
+      const pkg = packages.find(p => p.id === pkgId);
+      if (!pkg) return;
+
+      const op = operators.find(o => o.id === pkg.operatorId) || { name: 'SIM', logo: 'https://placehold.co/48x48/ffffff/000?text=SIM' };
+
+      const modal = document.getElementById('videoModal');
+      const dialog = document.getElementById('modalDialogBox');
+      const title = document.getElementById('modalTitle');
+      const desc = document.getElementById('modalDesc');
+      const logoImg = document.getElementById('modalLogoImg');
+      const video = document.getElementById('videoElement');
+
+      if (title) title.textContent = pkg.title;
+      if (desc) desc.textContent = pkg.desc || 'ဗီဒီယိုပါ ညွှန်ကြားချက်အတိုင်း အဆင့်ဆင့် လိုက်နာဆောင်ရွက်ပေးပါ။';
+      
+      if (logoImg) {
+        logoImg.src = op.logo;
+        logoImg.onerror = () => { logoImg.src = 'https://placehold.co/48x48/ffffff/000?text=' + op.name.charAt(0); };
+      }
+
+      if (dialog) {
+        dialog.classList.remove('max-w-sm', 'sm:max-w-md');
+        dialog.classList.add('max-w-2xl');
+      }
+
+      if (video) {
+        video.src = pkg.videoUrl;
+        video.load();
+      }
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+          modal.classList.remove('opacity-0');
+          if (video) video.play().catch(() => {});
+        }, 10);
+      }
+    }
+
+    function closeVideoModal() {
+      const modal = document.getElementById('videoModal');
+      const video = document.getElementById('videoElement');
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+      }
+      if (modal) {
+        modal.classList.add('opacity-0');
+        setTimeout(() => {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }, 200);
+      }
+    }
+
+    function adjustModalSize(videoEl) {
+      const dialog = document.getElementById('modalDialogBox');
+      if (!dialog || !videoEl) return;
+      if (videoEl.videoHeight > videoEl.videoWidth) {
+        dialog.classList.remove('max-w-2xl');
+        dialog.classList.add('max-w-sm', 'sm:max-w-md');
+      } else {
+        dialog.classList.remove('max-w-sm', 'sm:max-w-md');
+        dialog.classList.add('max-w-2xl');
+      }
+    }
+
+    function toggleVideoFullscreen() {
+      const video = document.getElementById('videoElement');
+      if (!video) return;
+      if (video.requestFullscreen) video.requestFullscreen();
+      else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (!input || !icon) return;
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-solid fa-eye text-yellow-400 text-sm';
+      } else {
+        input.type = 'password';
+        icon.className = 'fa-solid fa-eye-slash text-slate-400 text-sm';
+      }
+    }
+
+    function handleAdminEntry() {
+      if (isAdmin) openDashboard();
+      else openLoginModal();
+    }
+
+    function openLoginModal() {
+      const input = document.getElementById('loginPassword');
+      if (input) { input.value = ''; input.type = 'password'; }
+      const icon = document.getElementById('passEyeIcon');
+      if (icon) icon.className = 'fa-solid fa-eye-slash text-slate-400 text-sm';
+
+      const modal = document.getElementById('loginModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => { if (input) input.focus(); }, 50);
+      }
+    }
+
+    function closeLoginModal() {
+      const modal = document.getElementById('loginModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    // Admin စကားဝှက်ကို လုံခြုံရေးအတွက် စစ်ဆေးပြီး Login ဝင်မယ်
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const pass = document.getElementById('loginPassword').value;
+      if (pass === 'KindVPN2026') { // သင့်ရဲ့ စကားဝှက် (အပြောင်းအလဲလုပ်လို့ရပါတယ်)
+        isAdmin = true;
+        adminPass = pass;
+        closeLoginModal();
+        updateAdminDisplay();
+        showToast('Admin Panel သို့ အောင်မြင်စွာ ဝင်ရောက်ပါသည်', 'success');
+        openDashboard();
+      } else {
+        showToast('စကားဝှက် မှားယွင်းနေပါသည်!', 'error');
+      }
+    }
+
+    function handleLogout() {
+      isAdmin = false;
+      closeDashboard();
+      updateAdminDisplay();
+      showToast('Admin မှ ထွက်ပြီးပါပြီ', 'info');
+    }
+
+    function updateAdminDisplay() {
+      const btnText = document.getElementById('adminBtnText');
+      const icon = document.getElementById('adminLockIcon');
+      if (isAdmin) {
+        if (btnText) btnText.textContent = 'Dashboard';
+        if (icon) icon.className = 'fa-solid fa-unlock-keyhole text-yellow-400 text-xs';
+      } else {
+        if (btnText) btnText.textContent = 'Admin Panel';
+        if (icon) icon.className = 'fa-solid fa-lock text-yellow-400 text-xs';
+      }
+      renderPackages();
+    }
+
+    function openDashboard() {
+      populateOperatorSelect();
+      renderDashboardLists();
+      switchAdminTab('pkgs');
+      const modal = document.getElementById('dashboardModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeDashboard() {
+      const modal = document.getElementById('dashboardModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function switchAdminTab(name) {
+      const tabPkgs = document.getElementById('tabPkgsView');
+      const tabLogos = document.getElementById('tabLogosView');
+      const btnPkgs = document.getElementById('tabBtnPkgs');
+      const btnLogos = document.getElementById('tabBtnLogos');
+
+      if (name === 'pkgs') {
+        tabPkgs.classList.remove('hidden');
+        tabLogos.classList.add('hidden');
+        btnPkgs.classList.add('border-yellow-400', 'text-yellow-400');
+        btnPkgs.classList.remove('border-transparent', 'text-slate-400');
+        btnLogos.classList.remove('border-yellow-400', 'text-yellow-400');
+        btnLogos.classList.add('border-transparent', 'text-slate-400');
+      } else {
+        tabPkgs.classList.add('hidden');
+        tabLogos.classList.remove('hidden');
+        btnLogos.classList.add('border-yellow-400', 'text-yellow-400');
+        btnLogos.classList.remove('border-transparent', 'text-slate-400');
+        btnPkgs.classList.remove('border-yellow-400', 'text-yellow-400');
+        btnPkgs.classList.add('border-transparent', 'text-slate-400');
+      }
+    }
+
+    function renderDashboardLists() {
+      const pkgCountEl = document.getElementById('adminPkgCount');
+      const opCountEl = document.getElementById('adminOpCount');
+      if (pkgCountEl) pkgCountEl.textContent = packages.length;
+      if (opCountEl) opCountEl.textContent = operators.length;
+
+      const pkgList = document.getElementById('adminPackageList');
+      if (pkgList) {
+        if (packages.length === 0) {
+          pkgList.innerHTML = '<div class="p-4 text-center text-xs text-slate-500">Package မရှိသေးပါ</div>';
+        } else {
+          let html = '';
+          packages.forEach(pkg => {
+            const op = operators.find(o => o.id === pkg.operatorId) || { name: 'SIM', logo: '' };
+            html += `
+              <div class="p-3.5 flex items-center justify-between gap-2 hover:bg-slate-900/60 transition">
+                <div class="flex items-center space-x-2.5 min-w-0">
+                  <div class="brand-circle-badge w-8 h-8 p-1 ring-1 ring-slate-700">
+                    <img src="${escapeAttr(op.logo)}" alt="${escapeAttr(op.name)}" class="w-full h-full object-contain">
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-white truncate">${escapeHtml(pkg.title)}</div>
+                    <div class="text-[10px] text-slate-500 font-mono truncate">${escapeHtml(pkg.videoUrl)}</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button onclick="editPackageItem('${escapeAttr(pkg.id)}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-yellow-300 text-xs font-semibold">
+                    ပြင်မည်
+                  </button>
+                  <button onclick="requestDeletePackage('${escapeAttr(pkg.id)}')" class="px-2.5 py-1 rounded-lg bg-rose-950/60 hover:bg-rose-900 text-rose-300 text-xs font-semibold">
+                    ဖျက်မည်
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+          pkgList.innerHTML = html;
+        }
+      }
+
+      const opList = document.getElementById('adminOperatorList');
+      if (opList) {
+        let opHtml = '';
+        operators.forEach(op => {
+          const count = packages.filter(p => p.operatorId === op.id).length;
+          opHtml += `
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 flex items-center justify-between gap-2">
+              <div class="flex items-center space-x-3 min-w-0">
+                <div class="brand-circle-badge w-10 h-10 p-1 ring-2 ring-yellow-400/30">
+                  <img src="${escapeAttr(op.logo)}" alt="${escapeAttr(op.name)}" onerror="this.src='https://placehold.co/40x40/ffffff/000?text=${escapeAttr(op.name.charAt(0))}'">
+                </div>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold text-white truncate">${escapeHtml(op.name)} (${escapeHtml(op.shortName || op.name)})</div>
+                  <div class="text-[10px] text-yellow-400/90">${count} packages</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 shrink-0">
+                <button onclick="editOperatorItem('${escapeAttr(op.id)}')" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-yellow-300 text-xs font-semibold">
+                  <i class="fa-solid fa-pen text-[10px]"></i> ပြင်
+                </button>
+                <button onclick="requestDeleteOperator('${escapeAttr(op.id)}')" class="px-2 py-1 rounded-lg bg-rose-950/60 hover:bg-rose-900 text-rose-300 text-xs font-semibold">
+                  <i class="fa-solid fa-trash-can text-[10px]"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        });
+        opList.innerHTML = opHtml;
+      }
+    }
+
+    function populateOperatorSelect() {
+      const sel = document.getElementById('pkgOpSelect');
+      if (!sel) return;
+      sel.innerHTML = operators.map(o => `<option value="${escapeAttr(o.id)}">${escapeHtml(o.name)}</option>`).join('');
+    }
+
+    function previewOpLogoInput(url) {
+      const img = document.getElementById('logoUrlPreviewImg');
+      if (img) {
+        img.src = url || 'https://placehold.co/40x40/ffffff/000?text=Logo';
+        img.onerror = () => { img.src = 'https://placehold.co/40x40/ffffff/000?text=Err'; };
+      }
+    }
+
+    function resetOperatorForm() {
+      document.getElementById('opFormTitle').innerHTML = '<i class="fa-solid fa-circle-plus"></i> Operator & Logo အသစ်ထည့်ရန်';
+      document.getElementById('editOpId').value = '';
+      document.getElementById('opNameInput').value = '';
+      document.getElementById('opShortNameInput').value = '';
+      document.getElementById('opLogoUrlInput').value = '';
+      previewOpLogoInput('');
+      document.getElementById('cancelOpEditBtn').classList.add('hidden');
+      document.getElementById('saveOpBtn').textContent = 'Cloud သို့သိမ်းမည်';
+    }
+
+    function editOperatorItem(id) {
+      const op = operators.find(o => o.id === id);
+      if (!op) return;
+
+      document.getElementById('opFormTitle').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> "${escapeHtml(op.name)}" ကို ပြင်ဆင်ရန်`;
+      document.getElementById('editOpId').value = op.id;
+      document.getElementById('opNameInput').value = op.name;
+      document.getElementById('opShortNameInput').value = op.shortName || op.name;
+      document.getElementById('opLogoUrlInput').value = op.logo;
+      previewOpLogoInput(op.logo);
+      document.getElementById('cancelOpEditBtn').classList.remove('hidden');
+      document.getElementById('saveOpBtn').textContent = 'ပြင်ဆင်ချက် Cloud သိမ်းမည်';
+    }
+
+    async function handleSaveOperatorForm(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editOpId').value;
+      const name = document.getElementById('opNameInput').value.trim();
+      const shortName = document.getElementById('opShortNameInput').value.trim() || name;
+      const logo = document.getElementById('opLogoUrlInput').value.trim();
+
+      if (!name || !logo) { showToast('အော်ပရေတာ အမည်နှင့် Logo URL ဖြည့်ပါ', 'error'); return; }
+
+      if (editId) {
+        const idx = operators.findIndex(o => o.id === editId);
+        if (idx !== -1) operators[idx] = { ...operators[idx], name, shortName, logo };
+      } else {
+        const newId = 'op-' + name.toLowerCase().replace(/[^a-z0-9]/g, '') + '-' + Date.now().toString().slice(-4);
+        operators.push({ id: newId, name, shortName, logo });
+      }
+
+      // ချက်ချင်း Cloudflare ကို Save မယ်
+      const saved = await syncAllToWorker();
+      if(saved) {
+        resetOperatorForm();
+        renderSegmentedSwitch();
+        renderPackages();
+        populateOperatorSelect();
+        renderDashboardLists();
+      }
+    }
+
+    function requestDeleteOperator(id) {
+      const op = operators.find(o => o.id === id);
+      if (!op) return;
+
+      const hasPkgs = packages.some(p => p.operatorId === id);
+      if (hasPkgs) {
+        showToast('Package များကို အရင်ဖျက်ပါ', 'error');
+        return;
+      }
+
+      askConfirmation('Operator ဖျက်ရန် သေချာပါသလား?', `"${op.name}" ကို အပြီးတိုင် ဖျက်ပစ်ပါမည်။ (User များထံမှ ချက်ချင်းပျောက်မည်)`, async () => {
+        operators = operators.filter(o => o.id !== id);
+        if (activeOp === id) activeOp = 'all';
+        
+        await syncAllToWorker();
+        
+        renderSegmentedSwitch();
+        renderPackages();
+        populateOperatorSelect();
+        renderDashboardLists();
+      });
+    }
+
+    function openPackageFormModal() {
+      document.getElementById('pkgModalTitle').textContent = 'Package အသစ်ထည့်မည်';
+      document.getElementById('editPkgId').value = '';
+      document.getElementById('pkgTitleInput').value = '';
+      document.getElementById('pkgDescInput').value = '';
+      document.getElementById('pkgVideoUrlInput').value = '';
+      document.getElementById('pkgUssdInput').value = '';
+      populateOperatorSelect();
+
+      const modal = document.getElementById('packageModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function editPackageItem(id) {
+      const pkg = packages.find(p => p.id === id);
+      if (!pkg) return;
+
+      populateOperatorSelect();
+      document.getElementById('pkgModalTitle').textContent = 'Package အချက်အလက် ပြင်ဆင်မည်';
+      document.getElementById('editPkgId').value = pkg.id;
+      document.getElementById('pkgOpSelect').value = pkg.operatorId;
+      document.getElementById('pkgTitleInput').value = pkg.title;
+      document.getElementById('pkgDescInput').value = pkg.desc || '';
+      document.getElementById('pkgVideoUrlInput').value = pkg.videoUrl;
+      document.getElementById('pkgUssdInput').value = pkg.ussd || '';
+
+      const modal = document.getElementById('packageModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closePackageModal() {
+      const modal = document.getElementById('packageModal');
+      if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+    }
+
+    async function handleSavePackageForm(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editPkgId').value;
+      const operatorId = document.getElementById('pkgOpSelect').value;
+      const title = document.getElementById('pkgTitleInput').value.trim();
+      const desc = document.getElementById('pkgDescInput').value.trim();
+      const videoUrl = document.getElementById('pkgVideoUrlInput').value.trim();
+      const ussd = document.getElementById('pkgUssdInput').value.trim();
+
+      if (!title || !videoUrl) { showToast('ခေါင်းစဉ်နှင့် ဗီဒီယို Link ဖြည့်ပါ', 'error'); return; }
+
+      if (editId) {
+        const idx = packages.findIndex(p => p.id === editId);
+        if (idx !== -1) packages[idx] = { id: editId, operatorId, title, desc, videoUrl, ussd };
+      } else {
+        packages.unshift({ id: 'pkg-' + Date.now(), operatorId, title, desc, videoUrl, ussd });
+      }
+
+      const saved = await syncAllToWorker();
+      if(saved) {
+        closePackageModal();
+        renderSegmentedSwitch();
+        renderPackages();
+        renderDashboardLists();
+      }
+    }
+
+    function requestDeletePackage(id) {
+      const pkg = packages.find(p => p.id === id);
+      if (!pkg) return;
+
+      askConfirmation('Package ဖျက်ရန် သေချာပါသလား?', `"${pkg.title}" ကို အပြီးတိုင် ဖျက်ပစ်ပါမည်။ (User များထံမှ ချက်ချင်းပျောက်မည်)`, async () => {
+        packages = packages.filter(p => p.id !== id);
+        await syncAllToWorker();
+        renderSegmentedSwitch();
+        renderPackages();
+        renderDashboardLists();
+      });
+    }
+
+    function askConfirmation(title, msg, onOk) {
+      const modal = document.getElementById('confirmModal');
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmText').textContent = msg;
+      onConfirmAction = onOk;
+
+      document.getElementById('btnCancelConfirm').onclick = () => {
+        modal.classList.add('hidden'); modal.classList.remove('flex');
+      };
+      document.getElementById('btnAcceptConfirm').onclick = () => {
+        if (typeof onConfirmAction === 'function') onConfirmAction();
+        modal.classList.add('hidden'); modal.classList.remove('flex');
+      };
+
+      modal.classList.remove('hidden'); modal.classList.add('flex');
+    }
+
+    function showToast(msg, type) {
+      const box = document.getElementById('toastBox');
+      if (!box) return;
+
+      const t = document.createElement('div');
+      const bgClass = type === 'success' ? 'bg-emerald-500 text-slate-950 border-emerald-300 font-bold'
+        : type === 'error' ? 'bg-rose-950/95 border-rose-500/80 text-rose-200'
+        : 'bg-slate-900/95 border-slate-700 text-slate-200';
+      const iconClass = type === 'success' ? 'fa-circle-check text-slate-950'
+        : type === 'error' ? 'fa-circle-exclamation text-rose-400'
+        : 'fa-circle-info text-yellow-400';
+
+      t.className = 'pointer-events-auto flex items-center gap-2.5 px-4 py-2.5 rounded-2xl shadow-2xl border text-xs transform translate-y-2 opacity-0 transition duration-300 ' + bgClass;
+      t.innerHTML = `<i class="fa-solid ${iconClass}"></i><span>${escapeHtml(msg)}</span>`;
+      box.appendChild(t);
+
+      setTimeout(() => { t.classList.remove('translate-y-2', 'opacity-0'); }, 20);
+      setTimeout(() => { t.classList.add('translate-y-2', 'opacity-0'); setTimeout(() => t.remove(), 300); }, 3000);
+    }
+
+    function copyUssd(code) {
+      try {
+        const el = document.createElement('textarea');
+        el.value = code; document.body.appendChild(el); el.select();
+        document.execCommand('copy'); document.body.removeChild(el);
+        showToast(`USSD Code (${code}) ကူးယူပြီးပါပြီ!`, 'success');
+      } catch (e) { showToast('Copy မအောင်မြင်ပါ', 'error'); }
+    }
+
+    function escapeHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function escapeAttr(s) { return String(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+
+    window.addEventListener('click', (e) => {
+      if (e.target === document.getElementById('videoModal')) closeVideoModal();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // ၁။ အစပိုင်းမှာ ချက်ချင်းဒေတာလှမ်းယူမယ်
+      loadDataFromWorker();
+      
+      // ၂။ User တွေအတွက် နောက်ကွယ်ကနေ (၁၀ စက္ကန့် တစ်ခါ) Refresh အလိုလို လုပ်နေပေးမယ် (Admin ပြင်တာနဲ့ User ဆီချက်ချင်းရောက်အောင်)
+      setInterval(() => {
+        // သတိပြုရန် - Admin က Dashboard ဖွင့်ပြီး ပြင်နေတုန်းမှာ အလိုလို refresh မလုပ်အောင် တားထားမယ်
+        const isDashboardOpen = !document.getElementById('dashboardModal').classList.contains('hidden');
+        if (!isDashboardOpen) {
+          loadDataFromWorker();
+        }
+      }, 10000); 
+
+    });
+  </script>
+</body>
+</html>
